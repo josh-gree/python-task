@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "fe5873b873c525eda6223e20fd22f4c9ec625addba1f0a5f9eb3c9b94c1d8b2d"
+            "sha256": "3ed6d74c7abfab89772d5849d7f80b588823bc9945aa1ca88765b6e73e2d46b8"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -15,7 +15,12 @@
             }
         ]
     },
-    "default": {},
+    "default": {
+        "scraper": {
+            "editable": true,
+            "path": "./scraper"
+        }
+    },
     "develop": {
         "atomicwrites": {
             "hashes": [
