@@ -7,4 +7,5 @@ setup(
     author="Joshua Greenhalgh",
     packages=["scraper"],
     zip_safe=False,
+    entry_points={"console_scripts": ["run=scraper.run"]},
 )
