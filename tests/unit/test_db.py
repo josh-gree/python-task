@@ -14,7 +14,7 @@ def session():
     adverts table - yields a connection to this DB 
     and then cleans up.  
     """
-    engine = create_engine("sqlite:///:memory:", echo=True)
+    engine = create_engine("sqlite:///:memory:")
     Base.metadata.create_all(bind=engine)
     Session = sessionmaker(bind=engine)
     session = Session()
