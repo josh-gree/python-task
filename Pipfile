@@ -8,6 +8,7 @@ pytest = "*"
 
 [packages]
 scraper = {editable = true,path = "./scraper"}
+sqlalchemy = "*"
 
 [requires]
 python_version = "3.6"
