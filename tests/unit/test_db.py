@@ -1,10 +1,10 @@
 import pytest
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, inspect, Column, String, Integer
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import sessionmaker
 
-from scraper.db import Base, Advert
+from scraper.db import Base, Advert, create_model, get_session
 
 
 @pytest.fixture(scope="function")
@@ -23,10 +23,26 @@ def session():
     Base.metadata.drop_all(bind=engine)
 
 
+def test_create_model():
+    """
+    Test that we are able to create the Advert model against 
+    a clean DB.
+    """
+    uri = "sqlite:///:memory:"
+
+    engine = create_model(Advert, uri)
+    insp = inspect(engine)
+
+    tables = insp.get_table_names()
+
+    assert len(tables) == 1
+    assert tables[0] == Advert.__tablename__
+
+
 def test_commit_new(session):
     """
     Test that we are able to add a single row to 
-    adverts table.
+    the adverts table.
     """
     uid = "12345"
     title = "A Title"
