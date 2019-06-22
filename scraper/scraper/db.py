@@ -1,6 +1,9 @@
-from sqlalchemy import Column, String, Integer, UniqueConstraint
+from sqlalchemy import Column, String, Integer, UniqueConstraint, create_engine
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
+from sqlalchemy.engine.base import Engine
+from sqlalchemy.ext.declarative.api import DeclarativeMeta
 
 
 Base = declarative_base()
@@ -31,3 +34,34 @@ class Advert(Base):
         row = cls(uid=uid, title=title)
         session.add(row)
         session.commit()
+
+
+def create_model(model: DeclarativeMeta, conn_str: str) -> Engine:
+    """Creates a model in the DB specified by conn_str
+    
+    Arguments:
+        model {DeclarativeMeta} -- sqlalchmy model definition
+        conn_str {str} -- db connection string
+    
+    Returns:
+        None
+    """
+
+    engine = create_engine(conn_str)
+    Base.metadata.create_all(bind=engine, tables=[model.__table__])
+    return engine
+
+
+def get_session(engine: Engine) -> Session:
+    """Get a sqlalchmy session to the DB specified 
+    by engine.
+    
+    Arguments:
+        engine {Engine} - sqlalchmy engine to DB
+    
+    Returns:
+        Session -- A sqlalchmy session
+    """
+    session_factory = sessionmaker(bind=engine)
+    ses = session_factory()
+    return ses
