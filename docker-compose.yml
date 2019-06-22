@@ -6,14 +6,20 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_USER: test
-      POSTGRES_PASSWORD: testpass
-      POSTGRES_DB: heyjobs
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PW}
+      POSTGRES_DB: ${DB_NAME}
 
   scraper:
     build: .
     depends_on:
       - db
+    environment:
+      DB_USER: ${DB_USER}
+      DB_PW: ${DB_PW}
+      DB_NAME: ${DB_NAME}
+      DB_PORT: ${DB_PORT}
+      DB_HOST: ${DB_HOST}
 
 # Waits for the databse to be accesible
   start_dependencies:
