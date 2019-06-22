@@ -9,6 +9,7 @@ pytest = "*"
 [packages]
 scraper = {editable = true,path = "./scraper"}
 sqlalchemy = "*"
+psycopg2-binary = "*"
 
 [requires]
 python_version = "3.6"
