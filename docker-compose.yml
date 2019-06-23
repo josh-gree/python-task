@@ -10,6 +10,9 @@ services:
       POSTGRES_PASSWORD: ${DB_PW}
       POSTGRES_DB: ${DB_NAME}
 
+  testing_webserver:
+    build: tests/integration/testing_webserver
+
   scraper:
     build: .
     depends_on:
@@ -20,6 +23,9 @@ services:
       DB_NAME: ${DB_NAME}
       DB_PORT: ${DB_PORT}
       DB_HOST: ${DB_HOST}
+      URL_TO_SCRAPE: ${URL_TO_SCRAPE}
+      CONTAINER_SELECTOR: ${CONTAINER_SELECTOR}
+      TITLE_SELECTOR: ${TITLE_SELECTOR}
 
 # Waits for the databse to be accesible
   start_dependencies:
@@ -27,3 +33,10 @@ services:
     depends_on:
       - db
     command: db:5432
+
+# Waits for the testing webserver to be accesible
+  start_dependencies_testing_webserver:
+    image: dadarek/wait-for-dependencies
+    depends_on:
+      - testing_webserver
+    command: testing_webserver:8080

@@ -1,0 +1,2 @@
+[run]
+omit = scraper/scraper/scrape.py,scraper/setup.py

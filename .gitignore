@@ -1,5 +1,11 @@
 .venv
 .vscode
 
+# pytest
+.coverage
+htmlcov
+.pytest_cache
+
 # build artifacts
 *.egg-info
+__pycache__

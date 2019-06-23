@@ -5,11 +5,16 @@ verify_ssl = true
 
 [dev-packages]
 pytest = "*"
+ipython = "*"
+pytest-cov = "*"
+pylint = "*"
 
 [packages]
 scraper = {editable = true,path = "./scraper"}
 sqlalchemy = "*"
 psycopg2-binary = "*"
+requests = "*"
+bs4 = "*"
 
 [requires]
 python_version = "3.6"

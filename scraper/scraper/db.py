@@ -1,3 +1,9 @@
+"""
+sqlalchmy DB model definition
+"""
+
+from typing import Any
+
 from sqlalchemy import Column, String, Integer, UniqueConstraint, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -6,7 +12,7 @@ from sqlalchemy.engine.base import Engine
 from sqlalchemy.ext.declarative.api import DeclarativeMeta
 
 
-Base = declarative_base()
+Base: Any = declarative_base()
 
 
 class Advert(Base):
@@ -25,7 +31,6 @@ class Advert(Base):
     @classmethod
     def commit_new(cls, uid: str, title: str, session: Session) -> None:
         """Commits a new advert to the adverts table
-  
         Arguments:
             uid {str} -- uid of the advert
             title {str} -- title of the advert
@@ -38,11 +43,11 @@ class Advert(Base):
 
 def create_model(model: DeclarativeMeta, conn_str: str) -> Engine:
     """Creates a model in the DB specified by conn_str
-    
+
     Arguments:
         model {DeclarativeMeta} -- sqlalchmy model definition
         conn_str {str} -- db connection string
-    
+
     Returns:
         None
     """
@@ -52,13 +57,13 @@ def create_model(model: DeclarativeMeta, conn_str: str) -> Engine:
     return engine
 
 
-def get_session(engine: Engine) -> Session:
-    """Get a sqlalchmy session to the DB specified 
+def get_session(engine: Engine) -> Session:  # pragma: no cover
+    """Get a sqlalchmy session to the DB specified
     by engine.
-    
+
     Arguments:
         engine {Engine} - sqlalchmy engine to DB
-    
+
     Returns:
         Session -- A sqlalchmy session
     """
