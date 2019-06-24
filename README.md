@@ -1,5 +1,7 @@
 # HeyJobs Python Assessment Task
 
+[![CircleCI](https://circleci.com/gh/josh-gree/python-task/tree/master.svg?style=svg)](https://circleci.com/gh/josh-gree/python-task/tree/master)
+
 ## Overview
 
 The aim of this task is to extract information from job adverts on the heyjobs website (https://www.heyjobs.co/en/jobs-in-berlin) and to store the information in a postgres DB.
