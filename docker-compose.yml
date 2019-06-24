@@ -11,10 +11,10 @@ services:
       POSTGRES_DB: ${DB_NAME}
 
   testing_webserver:
-    build: tests/integration/testing_webserver
+    image: joshgree/testing_webserver:${BRANCH:-master}
 
   scraper:
-    build: .
+    image: joshgree/scraper:${BRANCH:-master}
     depends_on:
       - db
     environment:
