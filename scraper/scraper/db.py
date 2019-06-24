@@ -1,9 +1,6 @@
 """
 sqlalchmy DB model definition
 """
-
-from typing import Any
-
 from sqlalchemy import Column, String, Integer, UniqueConstraint, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -12,7 +9,7 @@ from sqlalchemy.engine.base import Engine
 from sqlalchemy.ext.declarative.api import DeclarativeMeta
 
 
-Base: Any = declarative_base()
+Base = declarative_base()
 
 
 class Advert(Base):

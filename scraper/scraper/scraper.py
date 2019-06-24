@@ -2,7 +2,7 @@
 Functions for extracting data from website
 """
 
-from typing import List, Union, Optional, Dict
+from typing import List, Union, Dict
 from bs4 import BeautifulSoup
 from bs4.element import Tag
 
@@ -17,13 +17,13 @@ class HTMLStructureChanged(Exception):
 
 def scrape(
     parsed_html: BeautifulSoup, container_selector: str, title_selector: str
-) -> List[Optional[Dict[str, str]]]:
+) -> List[Dict[str, str]]:
     """This function extracts the uid and title from each advert on the page.
     If the structure of the page has changed, no longer meets our assumptions,
-    then raises an exception that will kill the container.
+    then raises an exception that will kill the entrypoint.
 
     Arguments:
-        parsed_html {str} -- bs4 parsed html object
+        parsed_html {BeautifulSoup} -- bs4 parsed html object
         container_selector {str} -- css selector for the advert container
         title_selector {str} -- css selector for the title within the advert
 
@@ -31,7 +31,7 @@ def scrape(
         HTMLStructureChanged: Exception raised if page structure has changed
 
     Returns:
-        List[dict] -- list of dicts containing uid, title for each advert
+        List[Dict[str, str]] -- list of dicts containing uid, title for each advert
     """
     # get the container for the adverts
     container = parsed_html.select(container_selector)
@@ -60,7 +60,7 @@ def scrape(
     return advert_data
 
 
-def get_data(a_tag: Tag, title_selector: str) -> Union[dict, None]:
+def get_data(a_tag: Tag, title_selector: str) -> Union[Dict[str, str], None]:
     """Extract uid and title from the a tag. If we fail to get either of
     these we return None.
 
@@ -69,8 +69,8 @@ def get_data(a_tag: Tag, title_selector: str) -> Union[dict, None]:
         title_selector {str} -- css selector of advert title within the a tag
 
     Returns:
-        Union[dict, None] -- dict with uid and title of advert or None if either
-        is missing
+        Union[Dict[str, str], None] -- dict with uid and title of advert or None
+        if either is missing
     """
 
     href = a_tag.attrs.get("href", None)

@@ -1,3 +1,6 @@
+"""
+Test end to end usage in container
+"""
 import os
 import json
 
@@ -9,7 +12,10 @@ from scraper.db import Advert, get_session
 
 
 def test_end_to_end():
-
+    """
+    Test usage within container. Simulate the internet with a testing webserver
+    serving fixed html and check that the correct data is added to the DB.
+    """
     # Simulate the internet!
     cmd = split("docker-compose run --rm start_dependencies_testing_webserver")
     testing_webserver = Popen(cmd)
@@ -30,11 +36,14 @@ def test_end_to_end():
     # Query the adverts table in the DB
     engine = create_engine("postgresql://test:testpass@localhost:5432/heyjobs")
     session = get_session(engine)
-    res = session.query(Advert.id,Advert.uid,Advert.title).all()
+    res = session.query(Advert.id, Advert.uid, Advert.title).all()
     session.close()
 
     # Check we get what we expect in the adverts table
-    expected = [tuple(row) for row in json.load(open('tests/integration/expected_data/expected.json','r'))]
+    expected = [
+        tuple(row)
+        for row in json.load(open("tests/integration/expected_data/expected.json", "r"))
+    ]
     assert res == expected
 
     # bring containers down

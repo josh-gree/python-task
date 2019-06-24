@@ -22,12 +22,17 @@ def get_uid(url: str) -> str:
     return uid
 
 
+# Not testing these trust they do what they should
+# only really using library functions...
 def get_html(url: str) -> str:  # pragma: no cover
     """Function to make request to URL and return the
     text of the response
 
+    Arguments:
+        url {str} -- The url to make the request to
+
     Returns:
-        [str] -- The text of the response
+        str --  The text of the response
     """
     response = get(url)
     return response.text
@@ -36,8 +41,11 @@ def get_html(url: str) -> str:  # pragma: no cover
 def parse_html(html: str) -> BeautifulSoup:  # pragma: no cover
     """Function that returns a bs4 parsed html object
 
+    Arguments:
+        html {str} -- The html string to parse
+
     Returns:
-        [str] -- The html string to parse
+        BeautifulSoup -- bs4 parsed html object
     """
     parsed_html = BeautifulSoup(html, features="html.parser")
     return parsed_html

@@ -1,3 +1,6 @@
+"""
+Tests for util functions
+"""
 from scraper.utils import get_uid
 
 
