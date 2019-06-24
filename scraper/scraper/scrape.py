@@ -8,6 +8,9 @@ from scraper.db import Advert, create_model, get_session
 from scraper.scraper import scrape, HTMLStructureChanged
 from scraper.utils import get_html, parse_html
 
+CONTAINER_SELECTOR = "#job-search-container"
+TITLE_SELECTOR = ".job-card-title"
+
 
 def main():
     """Main entrypoint for scraper. Creates needed tables and extracts
@@ -30,12 +33,8 @@ def main():
 
     try:
         url = os.environ["URL_TO_SCRAPE"]
-        container_selector = os.environ["CONTAINER_SELECTOR"]
-        title_selector = os.environ["TITLE_SELECTOR"]
     except KeyError:
-        print(
-            "scraping env vars not all set - all of URL_TO_SCRAPE,CONTAINER_SELECTOR and TITLE_SELECTOR needed."
-        )
+        print("Need to set URL_TO_SCRAPE env var")
 
     # We try to scrape the data here - if it fails because the structure of
     # the page has changed or the page is not reachable we will get an exception
@@ -48,7 +47,7 @@ def main():
     parsed_html = parse_html(html)
 
     try:
-        adverts = scrape(parsed_html, container_selector, title_selector)
+        adverts = scrape(parsed_html, CONTAINER_SELECTOR, TITLE_SELECTOR)
     except HTMLStructureChanged as e:
         raise e
 

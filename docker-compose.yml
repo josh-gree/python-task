@@ -24,8 +24,6 @@ services:
       DB_PORT: ${DB_PORT}
       DB_HOST: ${DB_HOST}
       URL_TO_SCRAPE: ${URL_TO_SCRAPE}
-      CONTAINER_SELECTOR: ${CONTAINER_SELECTOR}
-      TITLE_SELECTOR: ${TITLE_SELECTOR}
 
 # Waits for the databse to be accesible
   start_dependencies:
