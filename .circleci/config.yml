@@ -1,0 +1,37 @@
+version: 2.1
+
+jobs:
+  run_tests:
+    machine:
+      image: circleci/classic:latest
+    steps:
+      - checkout
+      - run:
+          name: "build containers and tag"
+          command: |
+            docker build -t joshgree/scraper:$CIRCLE_BRANCH .
+            docker build -t joshgree/testing_webserver:$CIRCLE_BRANCH tests/integration/testing_webserver
+      - run:
+          name: "pipenv setup"
+          command: |
+            pip install --upgrade pip pipenv
+            pipenv install --deploy --dev
+      - run:
+          name: "run tests"
+          command: |
+            pipenv run pytest --junit-xml=test_results/pytest/results.xml tests/
+      - store_test_results:
+          path: test_results
+      - run:
+          name: Log in to docker cloud
+          command: docker login --username $DOCKER_CLOUD_USER --password $DOCKER_CLOUD_PASSWORD
+      - run:
+          name: Push images to Docker cloud
+          command: |
+            docker push joshgree/scraper:$CIRCLE_BRANCH
+            docker push joshgree/testing_webserver:$CIRCLE_BRANCH
+
+workflows:
+  run_build_pipeline:
+    jobs:
+      - run_tests
