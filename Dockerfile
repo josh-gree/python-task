@@ -7,4 +7,4 @@ COPY ./scraper /app/scraper
 
 RUN pip install --no-cache-dir pipenv && pipenv install --clear --deploy
 
-CMD ["pipenv", "run", "scrape"]
+CMD ["pipenv", "run", "scraper_main"]
