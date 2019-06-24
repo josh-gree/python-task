@@ -1,52 +1,31 @@
 # HeyJobs Python Assessment Task
 
-Thank you for taking the time to complete this test task! The purpose of the task is to get an idea of your development style: the way you structure code, testing strategy, etc.
+## Overview
 
-## Requirements
+The aim of this task is to extract information from job adverts on the heyjobs website (https://www.heyjobs.co/en/jobs-in-berlin) and to store the information in a postgres DB.
 
-* Build a python application which:
-   * scrapes data from our website
-   * stores results in the database
+## Assumptions
 
-#### Scraper
-This part of the task implies scraping **uid** and **title** of Ads from the following page: https://www.heyjobs.de/en/jobs-in-berlin.
-* Each Ad is wrapped in an **&lt;a&gt;** tag. E.g.
-```
-<a href="/en/jobs/1e61e323-1e90-4b0c-a4cf-949ca74bbd7a" ...>
-```
-* Ad **uid** is the last part of the relative url. In this case it is `1e61e323-1e90-4b0c-a4cf-949ca74bbd7a`
-* Title is the bold text at the top of each Ad
-* Only data from the first page is required. No need to implement pagination.
+Scraping data from a website, not under your control, is inherently hard to make robust. Any solution should have clear assumptions about the structure of the page and should fail quickly and obviously if these assumptions no longer hold. In this case I am making the following assumptions;
 
-#### Database
-The scraped data should be stored in the database table with the following schema:
-```
-id | uid | title
-```
+1. There exists an element on the page with `id=job-search-container` which contains all the adverts.
+2. This element consists of a collection of `<a>` tags each of which contain the information required (some of which are not adverts but navigation controls).
+3. Each `<a>` tag that is an advert will have two peices of data the `uid` and the `title`.
+4. The `uid` will be contained in the `href` of the `<a>` tag.
+5. The `title` is the text of an element with `class=job-card-title`
 
-#### Docker
-This project is containerized to simplify implementation and testing.
-`run.py` is supposed to trigger the scraper. So it is used as an entrypoint in the Dockerfile.
-However you are free to change the entrypoint and the Dockerfile to fit your needs.  
-The configuration specified in `docker-compose.yml` implies the following database connection params:
-```
-dbname: 'heyjobs'
-host: 'db'
-port: 5432
-user: 'test'
-password: 'testpass'
-```
+The main logic that deals with the extraction of this data and failing when these assumptions no longer hold can be found in `scraper/scraper/scraper:scrape` and `scraper/scraper/scraper:get_data`. If the stuructre of the page fails to meet the assumptions above a custom exception (`HTMLStructureChanged`) will be raised causing the main entrypoint to fail.
 
-### Running the Task
-We will run your solution with these commands:
-```
-docker-compose run --rm start_dependencies
-docker-compose up scraper
-```
+## Packaging
 
-After the scraper command finishes we expect the corresponding table to be filled with the scraped data.
+The code for scraping and storing the data is all packaged as a python module that is installed in the container, along with it's dependencies, using pipenv. I generally think this is good practice but perhaps a little over the top for this situation...
 
-## Note
-Don't fork this repository. Create your own repository and send us a link to it. You may describe some of the assumptions you had in the README file of your repository.
+## Database
 
-**Have fun!**
+I have made use of sqlalchmy to construct a DB model for storing the extracted data (`scraper/scraper/db:Advert`). The main entrypoint creates the necessry table in the DB when it begins - if the table already exists then it will not be recreated. I have enforced a compound unique constraint on `uid` and `title` columns so that the scraping process can be rerun and only new adverts will be added to the DB. I am making use of an auto-increminting id as the tables primary key.
+
+## Testing
+
+### Unit
+
+### Integration
