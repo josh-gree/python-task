@@ -4,15 +4,23 @@
 
 The aim of this task is to extract information from job adverts on the heyjobs website (https://www.heyjobs.co/en/jobs-in-berlin) and to store the information in a postgres DB.
 
+### Local setup
+
+I make use of pipenv and pyenv for managing isolated python enviroments. To use this code locally it will be neccesery to have `python=3.6.8` and to have pipenv installed (`pip install pipenv`). To create the python env you can then run;
+
+```bash
+pipenv install --dev # this installs dev and prod dependencies
+```
+
 ## Assumptions
 
 Scraping data from a website, not under your control, is inherently hard to make robust. Any solution should have clear assumptions about the structure of the page and should fail quickly and obviously if these assumptions no longer hold. In this case I am making the following assumptions;
 
 1. There exists an element on the page with `id=job-search-container` which contains all the adverts.
 2. This element consists of a collection of `<a>` tags each of which contain the information required (some of which are not adverts but navigation controls).
-3. Each `<a>` tag that is an advert will have two peices of data the `uid` and the `title`.
-4. The `uid` will be contained in the `href` of the `<a>` tag.
-5. The `title` is the text of an element with `class=job-card-title`
+3. The `uid` will be contained in the `href` of the `<a>` tag.
+4. The `title` is the text of an element with `class=job-card-title`
+5. If either `uid` or `title` are missing then do not treat `<a>` tag as an advert. This could probably be a looser assumption such that we allow for adverts to have one but not both missing.
 
 The main logic that deals with the extraction of this data and failing when these assumptions no longer hold can be found in `scraper/scraper/scraper:scrape` and `scraper/scraper/scraper:get_data`. If the stuructre of the page fails to meet the assumptions above a custom exception (`HTMLStructureChanged`) will be raised causing the main entrypoint to fail.
 
@@ -26,6 +34,24 @@ I have made use of sqlalchmy to construct a DB model for storing the extracted d
 
 ## Testing
 
-### Unit
+Tests are run on circleCI.
 
-### Integration
+Tests cover most of the functions other than `scraper/scraper/utils:get_html`, `scraper/scraper/utils:parse_html` and `scraper/scraper/db:get_session` since these are very simple and would really just be re-testing library code. The entrypoint `scraper/scraper/main:main` is not unit tested but is tested in the end-to-end integration test within the container.
+
+Integreation tests run against a testing webserver rather than the actual internet. I have copied the html for the target page on 23/06/19 and serve this in lieu of accesing the actual internet.
+
+To run the tests locally;
+
+```bash
+pipenv run pytest tests/
+```
+
+## Misc
+
+- code is linted using `pylint`
+- code is formated using `black`
+- all functions are type annotated
+
+## NB
+
+I did most of the coding for this exercise from the UK and the URL specified redirects to `https://www.heyjobs.co/en-gb/jobs-in-Berlin` whilst here - this page is empty and so this caused me some trouble!
