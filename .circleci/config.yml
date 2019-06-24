@@ -12,8 +12,12 @@ jobs:
             docker build -t joshgree/scraper:$CIRCLE_BRANCH .
             docker build -t joshgree/testing_webserver:$CIRCLE_BRANCH tests/integration/testing_webserver
       - run:
+          name: "install 3.6.8"
+          command: pyenv install 3.6.8
+      - run:
           name: "pipenv setup"
           command: |
+            pyenv global 3.6.8
             pip install --upgrade pip pipenv
             pipenv install --deploy --dev
       - run:
